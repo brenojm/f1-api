@@ -8,7 +8,7 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
         "DATABASE_URL",
-        "postgresql://postgres:secret@localhost:5432/f1db",
+        "postgresql://postgres:jogadornumero01@localhost:5432/f1db",
     )
 
     db.init_app(app)
