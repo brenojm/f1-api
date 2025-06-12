@@ -17,7 +17,7 @@ API RESTful em **Flask 3** + **PostgreSQL** que gerencia o universo da Fórmula 
 | **Parte 1** | **Definição de requisitos** (10 regras funcionais) | `part1` | 12-abr-2025 ✅ |
 | **Parte 2** | **Modelagem de banco**, repositórios CRUD e seed com dados reais | `part2` | 23-mai-2025 ✅ |
 | **Parte 3** | Services, validações de negócio e controllers REST | `part3` | 6-jun-2025 ✅ |
-| **Parte 4** | Documentação Swagger, testes automatizados e deploy | — | 28-jun-2025 |
+| **Parte 4** | Implementação de um jupyter notebook | `part4` | 12-jun-2025 ✅ |
 
 ---
 
