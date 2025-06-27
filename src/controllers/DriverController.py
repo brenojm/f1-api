@@ -20,12 +20,14 @@ class DriverResponseSchema(Schema):
     full_name = fields.Str()
     nationality = fields.Str(allow_none=True)
     date_of_birth = fields.Date(allow_none=True)
+    image_url = fields.Str()
 
 
 class DriverRequestSchema(Schema):
     full_name = fields.Str(required=True)
     nationality = fields.Str()
     date_of_birth = fields.Date()
+    image_url = fields.Str()
 
     @validates("full_name")
     def validate_name(self, value: str):

@@ -16,10 +16,10 @@ def getDrivers() -> List[Driver]:
 def getDriver(driver_id: int) -> Optional[Driver]:
     return get(driver_id)
 
-def addDriver(full_name: str, nationality: str = None, date_of_birth=None) -> Driver:
+def addDriver(full_name: str, nationality: str = None, date_of_birth=None, image_url: str = None) -> Driver:
     if not full_name:
         raise ValidationError("full_name must not be empty")
-    return add(full_name=full_name, nationality=nationality, date_of_birth=date_of_birth)
+    return add(full_name=full_name, nationality=nationality, date_of_birth=date_of_birth, image_url=image_url)
 
 
 def updateDriver(driver_id: int, data: dict) -> Optional[Driver]:

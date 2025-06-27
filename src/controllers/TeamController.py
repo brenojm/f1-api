@@ -60,6 +60,7 @@ class TeamItem(MethodResource, Resource):
     @marshal_with(TeamResponseSchema)
     def put(self, team_id: int, **kwargs):
         try:
+            print(kwargs)
             team = updateTeam(team_id, kwargs)
             if not team:
                 abort(404, message="Resource not found")

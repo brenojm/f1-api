@@ -1,7 +1,7 @@
 from typing import List, Optional
 from datetime import date
 from marshmallow import ValidationError
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, case
 
 from src.entities.Season import Season
 from src.entities.Result import Result
@@ -45,34 +45,38 @@ def deleteSeason(season_id: int) -> bool:
     return delete(season_id)
 
 def driverStandings(season_id: int):
-    """Retorna ranking de pilotos da temporada."""
+    """Retorna ranking de pilotos da temporada, incluindo 1 ponto extra para fastest_lap."""
     rows = (
         db.session.query(
             Driver.id.label("driver_id"),
             Driver.full_name,
-            func.coalesce(func.sum(Result.points), 0).label("points"),
+            # Somas os pontos existentes e adiciona 1 se fastest_lap for TRUE
+            (func.coalesce(func.sum(Result.points), 0) +
+             func.sum(case((Result.fastest_lap == True, 1), else_=0))).label("points"),
         )
         .join(Result, Driver.id == Result.driver_id)
         .join(Race, Result.race_id == Race.id)
         .filter(Race.season_id == season_id)
-        .group_by(Driver.id)
+        .group_by(Driver.id, Driver.full_name) # Inclua Driver.full_name no GROUP BY para evitar avisos
         .order_by(desc("points"), Driver.full_name)
         .all()
     )
     return [dict(r._mapping) for r in rows]
 
 def teamStandings(season_id: int):
-    """Retorna ranking de equipes da temporada."""
+    """Retorna ranking de equipes da temporada, incluindo 1 ponto extra para fastest_lap."""
     rows = (
         db.session.query(
             Team.id.label("team_id"),
             Team.name,
-            func.coalesce(func.sum(Result.points), 0).label("points"),
+            # Somas os pontos existentes e adiciona 1 se fastest_lap for TRUE para resultados da equipe
+            (func.coalesce(func.sum(Result.points), 0) +
+             func.sum(case((Result.fastest_lap == True, 1), else_=0))).label("points"),
         )
         .join(Result, Team.id == Result.team_id)
         .join(Race, Result.race_id == Race.id)
         .filter(Race.season_id == season_id)
-        .group_by(Team.id)
+        .group_by(Team.id, Team.name) # Inclua Team.name no GROUP BY para evitar avisos
         .order_by(desc("points"), Team.name)
         .all()
     )
