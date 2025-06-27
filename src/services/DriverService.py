@@ -7,6 +7,7 @@ from src.repositories.DriverRepository import (
     update,
     delete,
 )
+from src.services.ResultService import getResultsByDriverId
 from src.entities.Driver import Driver
 
 def getDrivers() -> List[Driver]:
@@ -27,4 +28,11 @@ def updateDriver(driver_id: int, data: dict) -> Optional[Driver]:
 
 
 def deleteDriver(driver_id: int) -> bool:
+    driver_to_delete = get(driver_id)
+    if not driver_to_delete:
+        raise ValidationError("driver not found")
+
+    results = getResultsByDriverId(driver_id)
+    if results:
+        raise ValidationError(f"cannot delete driver {driver_id} as there are associated results.")
     return delete(driver_id)

@@ -44,23 +44,28 @@ def addContract(
     number: int,
     salary_musd: float = None,
 ) -> DriverContract:
-    # validações de existência
-    if not get_season(season_id):
+    season = get_season(season_id)
+    if not season:
         raise ValidationError("season not found")
     if not get_team(team_id):
         raise ValidationError("team not found")
     if not get_driver(driver_id):
         raise ValidationError("driver not found")
 
-    # número do carro
+    
     if number < 1 or number > 99:
         raise ValidationError("number must be between 1 and 99")
+    
+    existing_contracts = list_all()
+    for contract in existing_contracts:
+        if contract.number == number and contract.season == get_season(season_id):
+            raise ValidationError(f"number {number} already taken in {season.year} season")
 
-    # piloto já contratado na temporada (requisito 2)
+    
     if _driver_already_contracted(season_id, driver_id):
         raise ValidationError("driver already contracted in this season")
 
-    # máx. 2 pilotos por equipe na temporada
+    
     if _team_contract_count(season_id, team_id) >= 2:
         raise ValidationError("team already has two drivers in this season")
 
@@ -74,7 +79,6 @@ def addContract(
 
 
 def updateContract(contract_id: int, data: dict) -> Optional[DriverContract]:
-    # não permitimos trocar season/team/driver depois de criado
     if any(k in data for k in ("season_id", "team_id", "driver_id")):
         raise ValidationError("season_id, team_id and driver_id are immutable")
 

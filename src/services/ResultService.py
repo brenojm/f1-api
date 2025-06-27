@@ -42,6 +42,9 @@ def _validate_position_points(position: int, points: int):
 def getResults() -> List[Result]:
     return list_all()
 
+def getResultsByDriverId(driver_id: int) -> List[Result]:
+    return [r for r in list_all() if r.driver_id == driver_id]
+
 
 def getResult(result_id: int) -> Optional[Result]:
     return get(result_id)

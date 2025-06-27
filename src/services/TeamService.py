@@ -30,7 +30,11 @@ def addTeam(
     if not name:
         raise ValidationError("name must not be empty")
 
-    # valida ISO-3166 alpha-3
+    existing_teams = list_all()
+    for team in existing_teams:
+        if team.name == name:
+            raise ValidationError(f"team with the name '{name}' already exists.")
+
     if base_country and len(base_country) != 3:
         raise ValidationError("base_country must have exactly 3 characters")
 
